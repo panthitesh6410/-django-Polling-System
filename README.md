@@ -1,4 +1,4 @@
-# -django-Voting-System
+# -django-Polling-System
 ********************************************
 virtualenv - "voting"
 username - panhitesh6410
