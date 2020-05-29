@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Voting System</title>
+    <link rel="stylesheet" href="{% static 'user/css/bootstrap.min.css' %}">
+    <script src="{% static 'user/js/bootstrap.min.js' %}"></script>
+    <style>
+        body{
+            background-image: url("{% static 'user/images/back.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .home_btn:hover{
+            background-color: #fff;
+            color: blue;
+            border-color: #159CCC;
+        }
+        #enquiry{
+            display: none;
+        }
+        i{
+            color:#fff;
+        }
+        .errorlist li{
+            color: #ddd;
+        }
+        label{
+            font-family: verdana;
+            margin-right:15px;
+            color:#fff;
+            margin-top: 8px;
+        }
+        .asm input{
+                width:250px;
+                height: 33px;
+                border: 0.5px solid #fff; 
+                border-radius: 4px;
+                margin-top:18px;
+        }
+        
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg transparent navbar-light bg-light" style="background: transparent;">
+        <a class="navbar-brand mt-0" href="{% url 'index' %}"><img src="{% static 'user/images/vote2.jpg' %}" width=170 alt="" style='border-radius:100px;'></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        </button>
+      
+        <div class="" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'index' %}"><h1 class="alert alert-dark">FREE ONLINE / OFFLINE VOTING SYSTEM</h1><span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a onclick="display()" id="toggler" role="button" class='btn btn-outline-primary' style='position:absolute;left:80%;top:30%;'>ENQUIRY</a>
+            </li>
+        </ul>
+        </div>
+    </nav>
+
+    {% if message_flag == 0 %}
+        <div class="container text-center">
+            <div class="container alert alert-success text-center">User not Exists</div>
+        </div>
+    {% endif %}
+
+    <div id="login" class="container mb-3">
+        <div class="container mb-3 mt-2 text-center" style='padding:40px;background-color:#888888;'>
+            <h2 style="color:#fff;">LOGIN / ENTER</h2>
+            <form action="" method='POST' class="form">
+               <div class="asm">
+                {% csrf_token %}
+                {{ form.as_p }}
+               </div>
+                <!-- <div class="form-group mt-3">
+                    <input type="email" name='email' class='form-control text-center' placeholder="type a valid e-mail" aria-selected="true" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name='password' class='form-control text-center' placeholder="type password" required>
+                </div>
+                <div class="form-group">
+                    <a href="#"><i>Forget Password ?</i></a>
+                </div>
+                <div class="group-form text-center"> -->
+                    <input type="submit" class='btn btn-outline-light' value="LOGIN / ENTER">
+                </div>
+                <div class="form-group mt-3 mb-5 text-center">
+                    <div style='color:black;'>If you are not a Registered user, <a href="{% url 'register' %}" style='color:red;'><b>CLICK HERE TO REGISTER</b></a></div>
+                </div>
+            </form>            
+        </div>
+    </div>
+
+    
+    <footer class="footer text-center fixed-bottom">
+        @COPYWRITE ISSUE 2020
+    </footer>
+
+    <div id="enquiry" class="container mb-3" style='position:absolute;left:10%;'>
+        <div class="container text-center mb-3 mt-2" style='padding:40px;background-color:#888888;'>
+            <h2 style="color:#fff;">ENQUIRY / FEEDBACK</h2>
+            <form action="" method='POST' class="form">
+                <div class="form-group mt-3">
+                    <input type="email" name='' class='form-control' placeholder="enter a valid e-mail" aria-selected="true" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="" id="" cols="30" class="form-control" rows="10" placeholder="enter a message" required></textarea>
+                </div>
+                <div class="group-form">
+                    <input type="submit" class='btn btn-outline-light' value="SEND MESSAGE">
+                </div>
+            </form>            
+        </div>
+    </div>
+
+
+<script src="{% static 'user/js/jquery.js' %}"></script>
+</body>
+</html>
+
+
+<script>
+    var flag = 0;
+    function display()
+    {
+        if(flag == 0)
+        {
+            document.getElementById("enquiry").style.display="inline";
+            flag = 1;
+            document.getElementById("toggler").innerHTML="LOGIN";
+        }
+        else
+        {
+            document.getElementById("enquiry").style.display="none";
+            flag = 0;
+            document.getElementById("toggler").innerHTML="ENQUIRY";
+        }
+    }
+</script>

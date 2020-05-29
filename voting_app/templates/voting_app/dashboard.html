@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Voting System</title>
+    <link rel="stylesheet" href="{% static 'voting_app/css/bootstrap.min.css' %}">
+    <script src="{% static 'voting_app/js/bootstrap.min.js' %}"></script>
+    <style>
+        body{
+            background-image: url("{% static 'voting_app/images/back.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        #logout_btn{
+            color:blue;
+        }
+        #logout_btn:hover{
+            color:#fff;
+        }
+        #enquiry{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg transparent navbar-light bg-light" style="background: transparent;">
+        <a class="navbar-brand mt-0" href="#"><img src="{% static 'voting_app/images/vote2.jpg' %}" width=170 alt="" style='border-radius:100px;'></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        </button>
+      
+        <div class="" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#"><h1 class="alert alert-dark">FREE ONLINE / OFFLINE VOTING SYSTEM</h1><span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a onclick="display()" id='logout_btn' role="button" class='btn btn-outline-primary' style='position:absolute;left:80%;top:30%;'>LOGOUT</a>
+            </li>
+        </ul>
+        </div>
+    </nav>
+    
+    <div class="container alert alert-light text-center">
+        <h4>{{user.username}}</h4>
+        <br>
+        <a href="{% url 'host_event_page' %}" class="btn btn-outline-dark mt-1 w-50">Host an event</a>
+        <br>
+        <a href="{% url 'participate_to_vote' %}" class="btn btn-outline-dark mt-3 w-50">Participate in an event</a>
+        <br>
+        <a href="#" class="btn btn-outline-dark mt-3 w-50">Update Profile</a>
+        <br>
+        <a href="#" class="btn btn-outline-danger mt-3 w-50 mb-4">Delete Profile</a>
+    </div>
+
+<!-- display events hosted and participated  -->
+    <div class="container mt-5 mb-5">
+    <div class="row">    
+        <div class="col-sm-6 alert alert-warning text-center">
+            <h5 class='mt-3 mb-3'>PARTICIPATED EVENTS</h5>
+            <hr>
+                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-1</a>
+                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-2</a>
+                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-3</a>
+                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-4</a>
+                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-5</a>
+        </div>
+        <div class="col-sm-6 alert alert-warning text-center">
+            <h5 class='mt-3'>HOSTED EVENTS</h5>
+            <hr>
+                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-1</a>
+                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-2</a>    
+        </div>
+        </div>
+    </div>
+    </div>
+
+<!-- option to delete account -->
+
+<!-- option to update/edit profile details -->
+
+<!--  -->
+
+
+    <footer class="footer text-center fixed-bottom">
+        @COPYWRITE ISSUE 2020
+    </footer>
+<!-- 
+    <div id="enquiry" class="container mb-3" style='position:absolute;left:10%;'>
+        <div class="container text-center mb-3 mt-2" style='padding:40px;background-color:#888888;'>
+            <h2 style="color:#fff;">ENQUIRY / FEEDBACK</h2>
+            <form action="" method='POST' class="form">
+                <div class="form-group mt-3">
+                    <input type="email" name='' class='form-control' placeholder="enter a valid e-mail" aria-selected="true" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="" id="" cols="30" class="form-control" rows="10" placeholder="enter a message" required></textarea>
+                </div>
+                <div class="group-form">
+                    <input type="submit" class='btn btn-outline-light' value="SEND MESSAGE">
+                </div>
+            </form>            
+        </div>
+    </div> -->
+
+
+<script src="{% static 'voting_ap/js/jquery.js' %}"></script>
+</body>
+</html>
+
+<!-- 
+<script>
+    var flag = 0
+    function display()
+    {
+        if(flag == 0)
+        {
+            document.getElementById("enquiry").style.display="inline";
+            flag = 1;
+        }
+        else{
+            document.getElementById("enquiry").style.display="none";
+            flag = 0;
+        }
+    }
+</script> -->

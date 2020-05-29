@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Voting System</title>
+    <link rel="stylesheet" href="{% static 'voting_app/css/bootstrap.min.css' %}">
+    <script src="{% static 'voting_app/js/bootstrap.min.js' %}"></script>
+    <style>
+        body{
+            background-image: url("{% static 'voting_app/images/back.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .home_btn:hover{
+            background-color: #fff;
+            color: blue;
+            border-color: #159CCC;
+        }
+        #enquiry{
+            display: none;
+        }
+        #events{
+            padding:10px;
+            font-family: verdana;
+            display:none;
+        }
+        #events table a{
+            color: blue;
+        }
+        /*#events h5{
+            color:#ddd;
+        }*/
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg transparent navbar-light bg-light " style="background: transparent;">
+        <a class="navbar-brand mt-0" href="#"><img src="{% static 'voting_app/images/vote2.jpg' %}" width=170 alt="" style='border-radius:100px;'></a>
+      
+        <div class="" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#"><h1 class="alert alert-dark">FREE ONLINE / OFFLINE VOTING SYSTEM</h1><span class="sr-only">(current)</span></a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item active">
+                <a onclick="display()" role="button" href='#enquiry' class='btn btn-outline-danger' style='position:absolute;left:65%;top:15%;'>LOGOUT</a>
+            </li>
+            {% endif %}
+            <li class="nav-item active">
+                <a onclick="display()" role="button" href='#enquiry' class='btn btn-outline-primary' style='position:absolute;left:75%;top:35%;'>ENQUIRY</a>
+            </li>
+        </ul>
+        </div>
+    </nav>
+    <div class="container text-center alert alert-{{status}}">{{message}}</div>
+
+    <div class="row mt-2" style="width:auto; height:auto; border-color:#ddd;margin-left:9%;">
+        <div class="col-sm-3">
+            <ul style="list-style:none;">
+                <li><img src="{% static 'voting_app/images/tick1.jpg' %}" height=30 style="border-radius:100px;" class="mr-3" alt="">Host Voting Event</li>
+                <br>
+                <li><img src="{% static 'voting_app/images/tick1.jpg' %}" height=30 style="border-radius:100px;" class="mr-3" alt="">Vote as per Choice</li>
+                <br>
+                <li><img src="{% static 'voting_app/images/tick1.jpg' %}" height=30 style="border-radius:100px;" class="mr-3" alt="">Free Voting Platform</li>
+                <br>
+            </ul>
+        </div>
+        <div class="col-sm-9 ">
+            <img src="{% static 'voting_app/images/vote3.jpg' %}" height=140 alt="" class="mb-5" style="border-radius:100px;">
+        </div>  
+    </div>
+
+    <div class="container mb-5">
+        <div class="row mt-3 mb-5">
+            <div class="col-sm-4"><a href="{% url 'login' %}"><button class=" home_btn ml-5 mt-3 btn btn-dark w-75" >HOST A POLLING EVENT</button></a></div>
+            <div class="col-sm-4"><a href="{% url 'register' %}"><button class="home_btn ml-5 mt-3 btn btn-dark w-75">PARTICIPATE TO VOTE</button></a></div>
+            <div class="col-sm-4"><a href="#events"><button onclick="view_events()" class="home_btn ml-5 mt-3 btn btn-dark w-75">VIEW EVENTS</button></a></div>
+        </div>
+    </div>
+
+
+    <div class="container mt-5 mb-5" id='events'>
+        <h3 class='text-center'>ALL EVENTS </h3>
+        <div class="container mt-5 alert alert-dark" id='present_events'>
+            <!-- this section shows a table of 2 cols with event name and participate view option -->
+            <h5>PRESENT EVENTS -</h5>
+            <hr>
+            <table class='table mt-3'>
+                <tr>
+                    <th>EVENT NAME </th>
+                    <th></th>
+                </tr>
+            {% for event in events %}
+                {% if event.event_status == 0 %}
+                <tr>
+                    <td>{{event.event_name}}</td>
+                    <td><a href="event_page/{{event.event_code}}">VIEW</a></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </table>
+        </div>
+        <div class="container mt-5 alert alert-dark" id='future_events'>
+            <h5>FUTURE EVENTS -</h5>
+            <hr>
+            <table class='table mt-3'>
+                <tr>
+                    <th>EVENT NAME </th>
+                    <th></th>
+                </tr>
+                {% for event in events %}
+                {% if event.event_status == 1 %}
+                <tr>
+                    <td>{{event.event_name}}</td>
+                    <td><a href="event_page/{{event.event_code}}">VIEW</a></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </table>
+        </div>
+        <div class="container mt-5 alert alert-dark" id='past_events'>
+            <h5>PAST EVENTS -</h5>
+            <hr>
+            <table class='table mt-3'>
+                <tr>
+                    <th>EVENT NAME </th>
+                    <th></th>
+                </tr>
+                {% for event in events %}
+                {% if event.event_status == -1 %}
+                <tr>
+                    <td>{{event.event_name}}</td>
+                    <td><a href="event_page/{{event.event_code}}">VIEW</a></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <footer class="footer text-center fixed-bottom">
+        @COPYWRITE ISSUE 2020
+    </footer>
+
+    <div id="enquiry" class="container mt-3 mb-3">
+        <div class="container text-center mb-3 mt-2" style='padding:40px;background-color:#888888;'>
+            <h3 style="color:#fff;">ENQUIRY / FEEDBACK</h3>
+            <form action="" method='POST' class="form">
+                {% csrf_token %}
+                <div class="form-group mt-3">
+                    <input type="email" name='email' class='form-control' placeholder="enter a valid e-mail" aria-selected="true" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" id="" cols="30" class="form-control" rows="10" placeholder="enter a message" required></textarea>
+                </div>
+                <div class="group-form">
+                    <input type="submit" class='btn btn-outline-light' value="SEND MESSAGE">
+                </div>
+            </form>   
+        </div>
+    </div>
+
+<script src="js/jquery.js"></script>
+</body>
+</html>
+
+
+<script>
+    var flag = 0;
+    function display()
+    {
+        if( flag == 0)
+        {
+            document.getElementById("enquiry").style.display="inline";
+            flag = 1;
+        }
+        else{
+            document.getElementById("enquiry").style.display="none";
+            flag = 0;
+        }
+    }
+
+    var flag1 = 0;
+    function view_events()
+    {
+        if(flag1 == 0)
+        {
+            document.getElementById("events").style.display="inline";
+            flag1 = 1;
+        }
+        else{
+            document.getElementById("events").style.display="none";
+            flag1 = 0;
+        }
+    }
+    
+</script>
