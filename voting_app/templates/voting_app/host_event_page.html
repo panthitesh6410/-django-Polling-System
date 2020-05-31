@@ -27,6 +27,10 @@
     </style>
 </head>
 <body>
+    {% if user.is_authenticated %}
+        <a onclick="display()" role="button" href="{% url 'logout' %}" class='btn btn-outline-danger mt-3 text-center' style='margin-left:25%;'>LOGOUT</a>
+        <a onclick="display()" role="button" href="{% url 'dashboard' %}" class='btn btn-outline-dark mt-3 text-center ml-3' style=''>DASHBOARD</a>
+    {% endif %}
     <nav class="navbar navbar-expand-lg transparent navbar-light bg-light " style="background: transparent;">
         <a class="navbar-brand mt-0" href="{% url 'index'%}"><img src="{% static 'voting_app/images/vote2.jpg' %}" width=170 alt="" style='border-radius:100px;'></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,24 +41,23 @@
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'index'%}"><h1 class="alert alert-dark">FREE ONLINE / OFFLINE VOTING SYSTEM</h1><span class="sr-only">(current)</span></a>
             </li>
-        {% if user.is_authenticated %}
-        <li class="nav-item active">
-            <a onclick="display()" id="toggler" role="button" class='btn btn-outline-primary' style='position:absolute;left:75%;top:35%;'>LOGOUT</a>
-        </li>
-        {% else %}
         <li class="nav-item active">
             <a onclick="display()" id="toggler" role="button" class='btn btn-outline-primary' style='position:absolute;left:75%;top:35%;'>ENQUIRY</a>
         </li>
-        {% endif %}
         </ul>
         </div>
     </nav>
-
+{% if msg_flag == 1 %}
     <div class="container text-center mb-4 alert alert-success">
         <div class="transparent text-center" style='font-family:verdana;'>Event Added Successfully</div>
     </div>
-
-    <div id="event" class="container mb-3">
+{% endif %}
+{% if msg_flag == 0 %}
+    <div class="container text-center mb-4 alert alert-danger">
+        <div class="transparent text-center" style='font-family:verdana;'>Error Adding Event</div>
+    </div>
+{% endif %}
+    <div id="event" class="container mb-5">
         <div class="container text-center mb-3 mt-2" style='padding:40px;background-color:#888888;'>
             <h2 style="color:#fff;">EVENT DETAILS</h2>
             <form action="" method='POST' class="form">
@@ -111,18 +114,24 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="text" name='' id='field_one' class='fields form-control' placeholder='enter choice 1'>
-                    <input type="text" name='' id='field_two' class='fields form-control' placeholder='enter choice 2'>
-                    <input type="text" name='' id='field_three' class='fields form-control' placeholder='enter choice 3'>
-                    <input type="text" name='' id='field_four' class='fields form-control' placeholder='enter choice 4'>
-                    <input type="text" name='' id='field_five' class='fields form-control' placeholder='enter choice 5'>
-                    <input type="text" name='' id='field_six' class='fields form-control' placeholder='enter choice 6'>
+                    <input type="text" name='field_one' id='field_one' class='fields form-control' placeholder='enter choice 1'>
+                    <input type="text" name='field_two' id='field_two' class='fields form-control' placeholder='enter choice 2'>
+                    <input type="text" name='field_three' id='field_three' class='fields form-control' placeholder='enter choice 3'>
+                    <input type="text" name='field_four' id='field_four' class='fields form-control' placeholder='enter choice 4'>
+                    <input type="text" name='field_five' id='field_five' class='fields form-control' placeholder='enter choice 5'>
+                    <input type="text" name='field_six' id='field_six' class='fields form-control' placeholder='enter choice 6'>
                 </div>
+                <!-- <div class="form-group">
+                    <input type="text" name='confirm_username' placeholder='confirm-username' class='form-control' required>
+                </div> -->
                 <div class="form-group">
                     <input type="password" name='confirm_password' placeholder='confirm-password' class='form-control' required>
                 </div>
                 <div class="form-group">
                     <input type="checkbox" class='form-check-input mt-2' required><small style='color:#ddd;'>Agree ? Details cannot be updated later</small>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" value='{{user.email}}' name='user_email'>
                 </div>
                 <div class="group-form">
                     <input type="submit" class='btn btn-outline-light' value="HOST EVENT">

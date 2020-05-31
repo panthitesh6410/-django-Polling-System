@@ -21,8 +21,9 @@ class Events(models.Model):
 class Options(models.Model):
     option_name = models.CharField(max_length=100)
     count = models.IntegerField(default=0)
-    event_code = models.ForeignKey(Events, on_delete=models.CASCADE)
-
+    # event_code = models.ForeignKey(Events, on_delete=models.CASCADE)
+    event_code = models.CharField(max_length=200)
+    
 # class Transactions(models.Model):
     # connect with user objcet (models.ForeignKey()) one to many relationship
     # time

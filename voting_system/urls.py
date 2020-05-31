@@ -16,12 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views     # for login/logout
+# from user.views import logout_request
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("voting_app.urls")),
-    path('register/', include("user.urls")),
+    path('user/', include("user.urls")),
+    # path('register/', include("user.urls")),
     # class based views -
-    path('login/', auth_views.LoginView.as_view(template_name='user/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='user/logout.html'), name='logout'),
+    # path('login/', auth_views.LoginView.as_view(template_name='user/login.html'), name='login'),
+    # path('logout/', auth_views.LogoutView.as_view(template_name='user/logout.html'), name='logout'),
+
 ]
