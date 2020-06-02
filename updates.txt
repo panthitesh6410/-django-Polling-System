@@ -1,0 +1,4 @@
+1. submittion of selected option (from event_page), and create  transaction model in models.py
+2.  while participate_to_vote , validate from transaction table that, if such event_code and referal code already exists in DB, do not allow to vote.
+3. after submitting or choosing the option, transactions table will get updated , the option count will increment by 1.
+***********************************
