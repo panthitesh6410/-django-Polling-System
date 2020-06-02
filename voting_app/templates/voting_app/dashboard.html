@@ -60,14 +60,18 @@
         <div class="col-sm-6 alert alert-warning text-center">
             <h5 class='mt-3 mb-3'>PARTICIPATED EVENTS</h5>
             <hr>
-                <a href="event_page/{{event.event_code}}" class='nav-link'>Event-5</a>
+        {% for transaction in transactions %}
+            {% if transaction.voter == user %}
+                <a href="{% url 'event_page' transaction.event_code %}" class='nav-link'>{{transaction.event_name}}</a>
+            {% endif %}
+        {% endfor %}
         </div>
         <div class="col-sm-6 alert alert-warning text-center">
             <h5 class='mt-3'>HOSTED EVENTS</h5>
             <hr>
             {% for event in events %}
                 {% if event.hosted_by == user %}
-                    <a href="event_page/{{event.event_code}}" class='nav-link'>{{event.event_name}}</a>
+                    <a href="{% url 'event_page' event.event_code %}" class='nav-link'>{{event.event_name}}</a>
                 {% endif %}
             {%  endfor %}
             </div>

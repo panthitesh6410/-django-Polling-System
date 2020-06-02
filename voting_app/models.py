@@ -24,10 +24,12 @@ class Options(models.Model):
     # event_code = models.ForeignKey(Events, on_delete=models.CASCADE)
     event_code = models.CharField(max_length=200)
     
-# class Transactions(models.Model):
-    # connect with user objcet (models.ForeignKey()) one to many relationship
-    # time
-    # option selected 
-    # event_code
-    # referal_code
+class Transactions(models.Model):
+    voter = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    voting_time = models.DateTimeField(auto_now_add=True) 
+    option_name = models.CharField(max_length=150)
+    event_name = models.CharField(max_length=150)  
+    event_code = models.CharField(max_length=70)
+    referal_code = models.CharField(max_length=70)
 
+# as user enter submit an option , quickly update the options count by 1

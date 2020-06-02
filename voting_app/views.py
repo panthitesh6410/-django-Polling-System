@@ -1,7 +1,8 @@
 
+import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Enquiry, Events, Options
+from .models import Enquiry, Events, Options, Transactions
 from django.contrib.auth.models import User
 
 def index(request):
@@ -17,6 +18,28 @@ def index(request):
         message="Message Sent Successfully"
     return render(request, 'voting_app/index.html', {'message': message, 'status': status, 'events': events})
 
+def compare_dates(d1, d2):
+    d1_y = d1.year
+    d1_m = d1.month
+    d1_d = d1.day
+    d2_y = d2.year
+    d2_m = d2.month
+    d2_d = d2.day
+    if d1_y > d2_y:
+        return d1
+    elif d1_y < d2_y:
+        return d2
+    else:
+        if d1_m > d2_m:
+            return d1
+        elif d1_m < d2_m:
+            return d2
+        else:
+            if d1_d > d2_d:
+                return d1
+            elif d1_d < d2_d:
+                return d2
+
 def host_event_page(request):
     msg_flag = -1
     if request.method == 'POST':
@@ -26,11 +49,35 @@ def host_event_page(request):
         event_code = request.POST['event_code']
         referal_code = request.POST['referal_code']
         starting_date = request.POST['starting_date']
+        starting_date_processing = starting_date.replace('T', '-').replace(':', '-').split('-')
+        starting_date_processing = [int(v) for v in starting_date_processing]
+        starting_date_processing_out = datetime.datetime(*starting_date_processing)
         ending_date = request.POST['ending_date']
-        # import current date and compare with end date 
-
-        # if end date exceeds cureent date --> status = -1
-        # if current date exceeds/grater than start date --> status = 1
+        ending_date_processing = ending_date.replace('T', '-').replace(':', '-').split('-')
+        ending_date_processing = [int(v) for v in ending_date_processing]
+        ending_date_processing_out = datetime.datetime(*ending_date_processing)
+        # import current date
+        curr_date = datetime.datetime.now()
+        # curr_y = curr_date.year
+        # curr_m = curr_date.month
+        # curr_d = curr_date.day
+        # start_y = int(starting_date.strftime("%Y"))
+        # start_m = int(starting_date.strftime("%m"))
+        # start_d = int(starting_date.strftime("%w"))
+        # end_y = int(ending_date.strftime("%Y"))
+        # end_m = int(ending_date.strftime("%m"))
+        # end_d = int(ending_date.strftime("%w"))
+        event_status = 0
+        # compare current date with starting and ending date :
+        # if curr_date > start_date && curr_date > end_date --> event_status=-1
+        if compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==curr_date:
+            event_status = -1 
+        # if curr_date < start_date && curr_date < end_date --> event_status=1
+        elif compare_dates(curr_date, starting_date_processing_out)==starting_date_processing_out and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
+            event_status = 1 
+        # if curr_date > start_date && curr_date < end_date --> event_status=0
+        elif compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
+            event_status = 0 
         choice = request.POST['choice']
         if(choice == 'two'):
             o1_name = request.POST['field_one']
@@ -119,25 +166,33 @@ def host_event_page(request):
             o6.save()
         user_email = request.POST['user_email']
         confirm_password = request.POST['confirm_password']
-        # confirm_username = request.POST['confirm_username']
+        # confirm_username = request.POST['confirm_username
         if User.objects.get(password=confirm_password, email=user_email):
             u = User.objects.get(password=confirm_password, email=user_email)
-            e = Events(event_name=event_name, event_code=event_code, referal_code=referal_code, hosted_by=u, event_description=event_description, starting_date=starting_date, ending_date=ending_date)
+            e = Events(event_name=event_name, event_code=event_code, event_status=event_status, referal_code=referal_code, hosted_by=u, event_description=event_description, starting_date=starting_date, ending_date=ending_date)
             e.save()
             msg_flag = 1    
     return render(request, 'voting_app/host_event_page.html', {'msg_flag': msg_flag})
 
 def participate_to_vote(request):
+    flag = 0
     msg_flag = 0
     if request.method == 'POST':
+        uname = request.POST['uname']
+        password =  request.POST['password']
         event_code = request.POST['event_code']
         referal_code = request.POST['referal_code']
-        e = Events.objects.get(event_code=event_code, referal_code=referal_code)
-        if e is not None:
-            return redirect('event_page/'+e.event_code)
+        u = User.objects.get(username=uname, password=password)
+        transac = Transactions.objects.get(event_code=event_code, referal_code=referal_code, voter=u)
+        if transac is None:
+            e = Events.objects.get(event_code=event_code, referal_code=referal_code)
+            if e is not None:
+                return redirect('event_page', e.event_code)
+            else:
+                msg_flag = -1
         else:
-            msg_flag = -1
-    return render(request, 'voting_app/participate_to_vote.html', {'msg_flag': msg_flag})
+            flag = -1
+    return render(request, 'voting_app/participate_to_vote.html', {'msg_flag': msg_flag, 'flag': flag})
 
 def event_page(request, event_code):
     event = Events.objects.get(event_code=event_code)
@@ -159,4 +214,5 @@ def event_page(request, event_code):
 
 def dashboard(request):
     events = Events.objects.all()
-    return render(request, 'voting_app/dashboard.html', {'events': events})
+    transactions = Transactions.objects.all()
+    return render(request, 'voting_app/dashboard.html', {'events': events, 'transactions': transactions})
