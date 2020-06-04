@@ -58,15 +58,6 @@ def host_event_page(request):
         ending_date_processing_out = datetime.datetime(*ending_date_processing)
         # import current date
         curr_date = datetime.datetime.now()
-        # curr_y = curr_date.year
-        # curr_m = curr_date.month
-        # curr_d = curr_date.day
-        # start_y = int(starting_date.strftime("%Y"))
-        # start_m = int(starting_date.strftime("%m"))
-        # start_d = int(starting_date.strftime("%w"))
-        # end_y = int(ending_date.strftime("%Y"))
-        # end_m = int(ending_date.strftime("%m"))
-        # end_d = int(ending_date.strftime("%w"))
         event_status = 0
         # compare current date with starting and ending date :
         # if curr_date > start_date && curr_date > end_date --> event_status=-1
@@ -183,18 +174,20 @@ def participate_to_vote(request):
         event_code = request.POST['event_code']
         referal_code = request.POST['referal_code']
         u = User.objects.get(username=uname, password=password)
-        transac = Transactions.objects.get(event_code=event_code, referal_code=referal_code, voter=u)
-        if transac is None:
-            e = Events.objects.get(event_code=event_code, referal_code=referal_code)
-            if e is not None:
-                return redirect('event_page', e.event_code)
-            else:
-                msg_flag = -1
+        e = Events.objects.get(event_code=event_code, referal_code=referal_code) 
+        if e is None:
+            msg_flag = -1
         else:
-            flag = -1
+            trans = Transactions.objects.filter(voter=u) 
+            if trans is not None:
+                flag = -1
+            else:
+                return redirect('event_page', event_code)
     return render(request, 'voting_app/participate_to_vote.html', {'msg_flag': msg_flag, 'flag': flag})
 
 def event_page(request, event_code):
+    msg_flag = 0
+    already_flag = 0
     event = Events.objects.get(event_code=event_code)
     options = Options.objects.filter(event_code=event_code)
     total_count = 1
@@ -205,12 +198,28 @@ def event_page(request, event_code):
         per = (option.count*100) / total_count
         percs.append(per)
     max_vote = 0
+    # us = User.objects.first()
     winner = ''
     for option in options:
         if option.count > max_vote:
             max_vote = option.count
             winner = option.option_name
-    return render(request, 'voting_app/event_page.html', {'event_code': event_code, 'event': event, 'total_count': total_count, 'options': options, 'percs': percs, 'winner': winner})
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        u = User.objects.get(email=email, password=password)
+        option_name = request.POST['option']
+        # event_code = event.event_code
+        # referal_code = event.referal_code
+        voter = u
+        # us = u
+        t = Transactions(voter=u, option_name=option_name, event_name=event.event_name, event_code=event.event_code, referal_code=event.referal_code)
+        if t is None:
+            t.save()
+            msg_flag = 1
+        else:
+            already_flag = 1
+    return render(request, 'voting_app/event_page.html', {'event_code': event_code, 'event': event, 'total_count': total_count, 'options': options, 'percs': percs, 'winner': winner, 'msg_flag': msg_flag, 'already_flag': already_flag})
 
 def dashboard(request):
     events = Events.objects.all()

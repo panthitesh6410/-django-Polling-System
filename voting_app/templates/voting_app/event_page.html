@@ -59,20 +59,25 @@
         <div class="container text-center alert alert-info">Event Code - {{event_code}}</div>
         
         <!-- Don't Display this section for a user if they already votted for a particular event -->
-    {% if event.event_status == 0 and user.is_authenticated and 0 %}
+    {% if event.event_status == 0 and user.is_authenticated %}
+        {% if msg_flag == 1 %}<div class="container-fluid alert alert-success text-center">Voted Successfully</div>{% endif %}
+        {% if already_flag == 1 %}<div class="container-fluid alert alert-danger text-center">Cannot vote again</div>{% endif %}
         <div class="container alert alert-light text-center mt-5">
             <h3>VOTE HERE -</h3>
             <hr style='width:600px;font-weight:800;'>
             <form action="" method="post" class="form">
+                {% csrf_token %}
                 <h4>Select your Choice -</h4>
                 <div class="form-group mt-4">
                     <!-- display options for that event -->
                 {% for option in options %}
-                    <input type="radio" name="vote_option" value='option1' id="" class='mr-3'><label for="">{{option.option_name}}</label><br>
+                    <input type="radio" name="option" value='{{option.option_name}}' id="" class='mr-3'><label for="">{{option.option_name}}</label><br>
                 {% endfor %}
                 </div>
+                <input type="hidden" value="{{user.email}}" name='email'>
+                <input type="hidden" value='{{user.password}}' name='password'>
                 <div class="form-group mt-4">
-                    <input type="submit" name='' class='btn btn-primary' value='SUBMIT'>
+                    <input type="submit" name='submit' class='btn btn-primary' value='SUBMIT'>
                 </div>
             </form>
         </div>
