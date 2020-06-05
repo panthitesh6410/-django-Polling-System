@@ -115,7 +115,7 @@
                 {% if event.event_status == 0 %}
                 <tr>
                     <td>{{event.event_name}}</td>
-                    <td><a href="{% url 'event_page' event.event_code %}">VIEW</a></td>
+                    <td><a href="{% url 'view_event' event.event_code %}">VIEW</a></td>
                 </tr>
                 {% endif %}
             {% endfor %}
@@ -133,7 +133,7 @@
                 {% if event.event_status == 1 %}
                 <tr>
                     <td>{{event.event_name}}</td>
-                    <td><a href="{% url 'event_page' event.event_code %}">VIEW</a></td>
+                    <td><a href="{% url 'view_event' event.event_code %}">VIEW</a></td>
                 </tr>
                 {% endif %}
             {% endfor %}
@@ -151,7 +151,7 @@
                 {% if event.event_status == -1 %}
                 <tr>
                     <td>{{event.event_name}}</td>
-                    <td><a href="{% url 'event_page' event.event_code %}">VIEW</a></td>
+                    <td><a href="{% url 'view_event' event.event_code %}">VIEW</a></td>
                 </tr>
                 {% endif %}
             {% endfor %}

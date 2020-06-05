@@ -7,5 +7,6 @@ urlpatterns = [
     path('host_event_page/', views.host_event_page, name='host_event_page'),
     path('participate_to_vote/', views.participate_to_vote, name='participate_to_vote'),
     path('event_page/<event_code>/', views.event_page, name='event_page'),
+    path('view_event/<event_code>/', views.view_event, name='view_event'),
     path('dashboard/', views.dashboard, name='dashboard'),
 ]

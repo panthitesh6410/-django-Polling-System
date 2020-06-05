@@ -232,6 +232,37 @@ def event_page(request, event_code):
             msg_flag = 1
     return render(request, 'voting_app/event_page.html', {'event_code': event_code, 'event': event, 'total_count': total_count, 'options': options, 'percs': percs, 'winner': winner, 'msg_flag': msg_flag})
 
+def view_event(request, event_code):
+    event = Events.objects.get(event_code=event_code)
+    starting_date_processing_out = event.starting_date
+    ending_date_processing_out = event.ending_date
+    curr_date = datetime.datetime.now()
+    event_status = 0
+    if compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==curr_date:
+        event_status = -1 
+    elif compare_dates(curr_date, starting_date_processing_out)==starting_date_processing_out and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
+        event_status = 1 
+    elif compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
+        event_status = 0 
+    event.event_status = event_status
+    event.save()  
+    options = Options.objects.filter(event_code=event_code)
+    total_count = 1
+    percs = []
+    for option in options:
+        total_count += option.count
+    for option in options:
+        per = (option.count*100) / total_count
+        percs.append(per)
+    max_vote = 0
+    winner = ''
+    for option in options:
+        if option.count > max_vote:
+            max_vote = option.count
+            winner = option.option_name
+    return render(request, 'voting_app/view_event.html', {'event_code': event_code, 'event': event, 'total_count': total_count, 'options': options, 'percs': percs, 'winner': winner})
+
+
 def dashboard(request):
     events = Events.objects.all()
     transactions = Transactions.objects.all()
