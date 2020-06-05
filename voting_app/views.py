@@ -189,6 +189,24 @@ def event_page(request, event_code):
     msg_flag = 0
     already_flag = 0
     event = Events.objects.get(event_code=event_code)
+    # 
+    starting_date_processing_out = event.starting_date
+    ending_date_processing_out = event.ending_date
+    curr_date = datetime.datetime.now()
+    event_status = 0
+    # compare current date with starting and ending date :
+    # if curr_date > start_date && curr_date > end_date --> event_status=-1
+    if compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==curr_date:
+        event_status = -1 
+    # if curr_date < start_date && curr_date < end_date --> event_status=1
+    elif compare_dates(curr_date, starting_date_processing_out)==starting_date_processing_out and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
+        event_status = 1 
+    # if curr_date > start_date && curr_date < end_date --> event_status=0
+    elif compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
+        event_status = 0 
+    event.event_status = event_status
+    event.save()  
+    # 
     options = Options.objects.filter(event_code=event_code)
     total_count = 1
     percs = []
@@ -198,7 +216,6 @@ def event_page(request, event_code):
         per = (option.count*100) / total_count
         percs.append(per)
     max_vote = 0
-    # us = User.objects.first()
     winner = ''
     for option in options:
         if option.count > max_vote:
@@ -209,13 +226,14 @@ def event_page(request, event_code):
         password = request.POST['password']
         u = User.objects.get(email=email, password=password)
         option_name = request.POST['option']
-        # event_code = event.event_code
-        # referal_code = event.referal_code
         voter = u
-        # us = u
         t = Transactions(voter=u, option_name=option_name, event_name=event.event_name, event_code=event.event_code, referal_code=event.referal_code)
         if t is None:
             t.save()
+            # increment count by 1 :
+            op = Options.objects.get(option_name=option_name, event_code=event_code)
+            op.count = op.count + 1
+            op.save()
             msg_flag = 1
         else:
             already_flag = 1
