@@ -178,35 +178,27 @@ def participate_to_vote(request):
         if e is None:
             msg_flag = -1
         else:
-            trans = Transactions.objects.filter(voter=u) 
-            if trans is not None:
+            trans = Transactions.objects.filter(voter=u, event_code=event_code, referal_code=referal_code) 
+            if trans:
                 flag = -1
             else:
                 return redirect('event_page', event_code)
     return render(request, 'voting_app/participate_to_vote.html', {'msg_flag': msg_flag, 'flag': flag})
 
 def event_page(request, event_code):
-    msg_flag = 0
-    already_flag = 0
     event = Events.objects.get(event_code=event_code)
-    # 
     starting_date_processing_out = event.starting_date
     ending_date_processing_out = event.ending_date
     curr_date = datetime.datetime.now()
     event_status = 0
-    # compare current date with starting and ending date :
-    # if curr_date > start_date && curr_date > end_date --> event_status=-1
     if compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==curr_date:
         event_status = -1 
-    # if curr_date < start_date && curr_date < end_date --> event_status=1
     elif compare_dates(curr_date, starting_date_processing_out)==starting_date_processing_out and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
         event_status = 1 
-    # if curr_date > start_date && curr_date < end_date --> event_status=0
     elif compare_dates(curr_date, starting_date_processing_out)==curr_date and compare_dates(curr_date, ending_date_processing_out)==ending_date_processing_out:
         event_status = 0 
     event.event_status = event_status
     event.save()  
-    # 
     options = Options.objects.filter(event_code=event_code)
     total_count = 1
     percs = []
@@ -221,23 +213,24 @@ def event_page(request, event_code):
         if option.count > max_vote:
             max_vote = option.count
             winner = option.option_name
+    msg_flag = 0
     if request.method == 'POST':
+        option_name = request.POST['option']
         email = request.POST['email']
         password = request.POST['password']
         u = User.objects.get(email=email, password=password)
-        option_name = request.POST['option']
-        voter = u
-        t = Transactions(voter=u, option_name=option_name, event_name=event.event_name, event_code=event.event_code, referal_code=event.referal_code)
-        if t is None:
-            t.save()
+        t = Transactions.objects.filter(voter=u, event_code=event.event_code, referal_code=event.referal_code)
+        if t.exists():
+            msg_flag = -1
+        else:
+            tr = Transactions(voter=u, option_name=option_name, event_name=event.event_name, event_code=event.event_code, referal_code=event.referal_code)
+            tr.save()
             # increment count by 1 :
             op = Options.objects.get(option_name=option_name, event_code=event_code)
             op.count = op.count + 1
             op.save()
             msg_flag = 1
-        else:
-            already_flag = 1
-    return render(request, 'voting_app/event_page.html', {'event_code': event_code, 'event': event, 'total_count': total_count, 'options': options, 'percs': percs, 'winner': winner, 'msg_flag': msg_flag, 'already_flag': already_flag})
+    return render(request, 'voting_app/event_page.html', {'event_code': event_code, 'event': event, 'total_count': total_count, 'options': options, 'percs': percs, 'winner': winner, 'msg_flag': msg_flag})
 
 def dashboard(request):
     events = Events.objects.all()

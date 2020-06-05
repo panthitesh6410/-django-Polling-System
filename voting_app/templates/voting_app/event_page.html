@@ -61,7 +61,7 @@
         <!-- Don't Display this section for a user if they already votted for a particular event -->
     {% if event.event_status == 0 and user.is_authenticated %}
         {% if msg_flag == 1 %}<div class="container-fluid alert alert-success text-center">Voted Successfully</div>{% endif %}
-        {% if already_flag == 1 %}<div class="container-fluid alert alert-danger text-center">Cannot vote again</div>{% endif %}
+        {% if msg_flag == -1 %}<div class="container-fluid alert alert-danger text-center">Error in Voting</div>{% endif %}
         <div class="container alert alert-light text-center mt-5">
             <h3>VOTE HERE -</h3>
             <hr style='width:600px;font-weight:800;'>

@@ -1,9 +1,0 @@
-3. 1.  while participate_to_vote , validate from transaction table that, if such event_code and referal code already exists in DB, do not allow to vote.
-***********************************
-2. after submitting or choosing the option, transactions table will get updated , the option count will increment by 1.
-***********************************
-3. To maintain event_status : 
-->copy same logic of compare_dates() from host_Event_page to index 
-or 
--> new curr_date field to compare dates and then update the status.
-***********************************
