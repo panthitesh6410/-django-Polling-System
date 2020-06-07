@@ -44,24 +44,26 @@
         </div>
     </nav>
     
+
+    {% if msg_flag == 1 %}<div class="container-fluid alert alert-success text-center">Thank you for voting</div>{% endif %}
+    {% if msg_flag == -1 %}<div class="container-fluid alert alert-danger text-center">Cannot vote again</div>{% endif %}
+        
     <!-- this page shows details about the event entered by host  -->
     
     <div id='details' class="container" style="font-family:verdana;">
-        <div class="container alert alert-primary  text-center" style='font-size:20px;'>{{event.event_name}}</div>
-        <div class="container text-center alert alert-primary">
+        <div class="container  text-center m-3" style='font-size:25px;font-family:stencil;'>{{event.event_name}}</div>
+        <div class="container text-center mb-5">
             <p>{{event.event_description}}</p>
         </div>
         <div class="container row ">
-            <div class="col-sm-6 alert alert-info text-center ">Start Date-Time : {{event.starting_date}}</div>
-            <div class="col-sm-6 alert alert-info text-center ">End Date-Time : {{event.ending_date}}</div>
+            <div class="col-sm-6 alert alert-warning text-center ">Start Date-Time : {{event.starting_date}}</div>
+            <div class="col-sm-6 alert alert-warning text-center ">End Date-Time : {{event.ending_date}}</div>
         </div>
         <!-- <div class="container text-center alert alert-info">Event Status - </div> -->
         <div class="container text-center alert alert-info">Event Code - {{event_code}}</div>
         
         <!-- Don't Display this section for a user if they already votted for a particular event -->
     {% if event.event_status == 0 and user.is_authenticated %}
-        {% if msg_flag == 1 %}<div class="container-fluid alert alert-success text-center">Voted Successfully</div>{% endif %}
-        {% if msg_flag == -1 %}<div class="container-fluid alert alert-danger text-center">Error in Voting</div>{% endif %}
         <div class="container alert alert-light text-center mt-5">
             <h3>VOTE HERE -</h3>
             <hr style='width:600px;font-weight:800;'>
