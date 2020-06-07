@@ -247,13 +247,13 @@ def view_event(request, event_code):
     event.event_status = event_status
     event.save()  
     options = Options.objects.filter(event_code=event_code)
-    total_count = 1
+    total_count = 0
     percs = []
     for option in options:
         total_count += option.count
-    for option in options:
-        per = (option.count*100) / total_count
-        percs.append(per)
+    # for option in options:
+    #     per = (option.count*100) / total_count
+    #     percs.append(per)
     max_vote = 0
     winner = ''
     for option in options:
