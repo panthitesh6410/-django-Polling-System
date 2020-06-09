@@ -174,8 +174,8 @@ def participate_to_vote(request):
         event_code = request.POST['event_code']
         referal_code = request.POST['referal_code']
         u = User.objects.get(username=uname, password=password)
-        e = Events.objects.get(event_code=event_code, referal_code=referal_code) 
-        if e is None:
+        e = Events.objects.filter(event_code=event_code, referal_code=referal_code) 
+        if not e.exists():
             msg_flag = -1
         else:
             trans = Transactions.objects.filter(voter=u, event_code=event_code, referal_code=referal_code) 
