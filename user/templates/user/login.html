@@ -45,10 +45,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg transparent navbar-light bg-light" style="background: transparent;">
-        <a class="navbar-brand mt-0" href="{% url 'index' %}"><img src="{% static 'user/images/vote2.jpg' %}" width=170 alt="" style='border-radius:100px;'></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        </button>
-      
+        <a class="navbar-brand mt-0" href="{% url 'index' %}"><img src="{% static 'user/images/vote2.jpg' %}" width=170 alt="" style='border-radius:100px;'></a>      
         <div class="" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -62,8 +59,8 @@
     </nav>
 
     {% if message_flag == -1 %}
-        <div class="container text-center">
-            <div class="container alert alert-danger text-center">User not Exists</div>
+        <div class="text-center">
+            <div class="container-fliud alert alert-danger text-center">User not Exists</div>
         </div>
     {% endif %}
 
